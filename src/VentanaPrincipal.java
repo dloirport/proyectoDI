@@ -153,7 +153,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
-        System.out.println("Hola");
+        GestionClientes ventana = new GestionClientes();
+        ventana.setVisible(true);
+        this.setVisible(false);
+        
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnPuntosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPuntosActionPerformed
@@ -161,7 +164,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnPuntosActionPerformed
 
     private void btnRegalosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegalosActionPerformed
-        tbnvbhn ventana = new tbnvbhn();
+        VentanaRegalos ventana = new VentanaRegalos();
         ventana.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_btnRegalosActionPerformed

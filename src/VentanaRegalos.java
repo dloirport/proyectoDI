@@ -12,12 +12,12 @@ import javax.swing.KeyStroke;
  *
  * @author dloirport
  */
-public class tbnvbhn extends javax.swing.JFrame {
+public class VentanaRegalos extends javax.swing.JFrame {
 
     /**
      * Creates new form tbnvbhn
      */
-    public tbnvbhn() {
+    public VentanaRegalos() {
         
         initComponents();
     }
