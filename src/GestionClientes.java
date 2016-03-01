@@ -61,8 +61,11 @@ public class GestionClientes extends javax.swing.JFrame {
         btnBorrarCli = new javax.swing.JButton();
         btnModCli = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
+        btnCancelar1 = new javax.swing.JButton();
 
-        ventanaModificar.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        ventanaModificar.setMinimumSize(new java.awt.Dimension(400, 550));
+        ventanaModificar.setModalExclusionType(java.awt.Dialog.ModalExclusionType.TOOLKIT_EXCLUDE);
+        ventanaModificar.setResizable(false);
 
         lblTitulo.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -287,7 +290,7 @@ public class GestionClientes extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -317,19 +320,28 @@ public class GestionClientes extends javax.swing.JFrame {
             }
         });
 
+        btnCancelar1.setText("Nuevo Cliente");
+        btnCancelar1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelar1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lblGestionClientes, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
+            .addComponent(lblGestionClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnModCli, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(78, 78, 78)
+                        .addComponent(btnCancelar1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
                         .addComponent(btnBorrarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModCli, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -344,12 +356,14 @@ public class GestionClientes extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnBorrarCli, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnModCli, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar1, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModCli, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnBorrarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarCliActionPerformed
@@ -360,7 +374,8 @@ public class GestionClientes extends javax.swing.JFrame {
         int fila = tablaClientes.getSelectedRow();
         int id = (int) tablaClientes.getValueAt(fila, 0);
         System.out.println(id);
-        
+        this.setVisible(false);
+        ventanaModificar.setLocationRelativeTo(this);
         ventanaModificar.setVisible(true);
     }//GEN-LAST:event_btnModCliActionPerformed
 
@@ -413,8 +428,13 @@ public class GestionClientes extends javax.swing.JFrame {
 
     private void btnCancelarModActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarModActionPerformed
         ventanaModificar.setVisible(false);
+        this.setVisible(true);
         
     }//GEN-LAST:event_btnCancelarModActionPerformed
+
+    private void btnCancelar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelar1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCancelar1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -485,6 +505,7 @@ public class GestionClientes extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBorrarCli;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCancelar1;
     private javax.swing.JButton btnCancelarMod;
     private javax.swing.JButton btnGuardarMod;
     private javax.swing.JButton btnModCli;

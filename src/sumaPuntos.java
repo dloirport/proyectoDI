@@ -14,6 +14,7 @@ public class sumaPuntos extends javax.swing.JFrame {
      */
     public sumaPuntos() {
         initComponents();
+        llenarCombo();
     }
 
     /**
@@ -41,12 +42,12 @@ public class sumaPuntos extends javax.swing.JFrame {
         btnCanjearRegalo = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         panelTransacciones = new javax.swing.JPanel();
-        txtConcepto = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         txtImporte = new javax.swing.JTextField();
         jLabel11 = new javax.swing.JLabel();
         txtPuntos = new javax.swing.JTextField();
+        cmbConcepto = new javax.swing.JComboBox();
         jButton1 = new javax.swing.JButton();
 
         setTitle("Gestion Puntos: Juanito Perez");
@@ -202,14 +203,6 @@ public class sumaPuntos extends javax.swing.JFrame {
 
         jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
 
-        txtConcepto.setText("Aumento por compra");
-        txtConcepto.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        txtConcepto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtConceptoActionPerformed(evt);
-            }
-        });
-
         jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel8.setText("Concepto: ");
 
@@ -227,6 +220,8 @@ public class sumaPuntos extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel11.setText("Importe:");
 
+        cmbConcepto.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Puntos por compra", "Promocion especial" }));
+
         javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
         panelTransacciones.setLayout(panelTransaccionesLayout);
         panelTransaccionesLayout.setHorizontalGroup(
@@ -238,17 +233,17 @@ public class sumaPuntos extends javax.swing.JFrame {
                     .addComponent(jLabel11))
                 .addGap(18, 18, 18)
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtConcepto)
                     .addComponent(txtImporte)
-                    .addComponent(txtPuntos, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(txtPuntos, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                    .addComponent(cmbConcepto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         panelTransaccionesLayout.setVerticalGroup(
             panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
-                    .addComponent(txtConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -288,8 +283,8 @@ public class sumaPuntos extends javax.swing.JFrame {
                             .addGap(89, 89, 89)
                             .addComponent(jButton1)
                             .addGap(26, 26, 26))
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)))
-                .addGap(0, 26, Short.MAX_VALUE))
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)))
+                .addGap(0, 23, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -323,10 +318,6 @@ public class sumaPuntos extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnCanjearRegaloActionPerformed
 
-    private void txtConceptoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtConceptoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtConceptoActionPerformed
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -348,6 +339,10 @@ public class sumaPuntos extends javax.swing.JFrame {
                 ventana.setVisible(true);
     }//GEN-LAST:event_formWindowClosing
 
+    private void llenarCombo(){
+        cmbConcepto.addItem("Puntos por compra");
+        cmbConcepto.addItem("Promoción especial");
+    }
     /**
      * @param args the command line arguments
      */
@@ -385,6 +380,7 @@ public class sumaPuntos extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCanjearRegalo;
+    private javax.swing.JComboBox cmbConcepto;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -404,7 +400,6 @@ public class sumaPuntos extends javax.swing.JFrame {
     private javax.swing.JPanel panelPuntosAcumulados;
     private javax.swing.JPanel panelRegalos;
     private javax.swing.JPanel panelTransacciones;
-    private javax.swing.JTextField txtConcepto;
     private javax.swing.JTextField txtImporte;
     private javax.swing.JTextField txtPuntos;
     // End of variables declaration//GEN-END:variables
