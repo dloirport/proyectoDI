@@ -1,11 +1,16 @@
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.UIManager;
 
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author dloirport
@@ -15,6 +20,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     /**
      * Creates new form VentanaPrincipal
      */
+    ConectorBaseDatos conector = new ConectorBaseDatos();
+
     public VentanaPrincipal() {
         initComponents();
     }
@@ -31,7 +38,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         panelIdentificador = new javax.swing.JPanel();
-        jTextField1 = new javax.swing.JTextField();
+        txtIDClie = new javax.swing.JTextField();
         btnIdentCli = new javax.swing.JButton();
         panelBotones = new javax.swing.JPanel();
         btnClientes = new javax.swing.JButton();
@@ -62,7 +69,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelIdentificadorLayout.createSequentialGroup()
                 .addContainerGap(54, Short.MAX_VALUE)
                 .addGroup(panelIdentificadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jTextField1)
+                    .addComponent(txtIDClie)
                     .addComponent(btnIdentCli, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
                 .addGap(84, 84, 84))
         );
@@ -70,7 +77,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             panelIdentificadorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelIdentificadorLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtIDClie, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(43, 43, 43)
                 .addComponent(btnIdentCli)
                 .addGap(38, 38, 38))
@@ -170,7 +177,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         GestionClientes ventana = new GestionClientes();
         ventana.setVisible(true);
         this.setVisible(false);
-        
+
     }//GEN-LAST:event_btnClientesActionPerformed
 
     private void btnPuntosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPuntosActionPerformed
@@ -184,11 +191,47 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_btnRegalosActionPerformed
 
     private void btnIdentCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIdentCliActionPerformed
-        sumaPuntos ventana = new sumaPuntos();
-        ventana.setVisible(true);
-        this.setVisible(false);
-    }//GEN-LAST:event_btnIdentCliActionPerformed
 
+
+        try {
+            int idCliente = Integer.parseInt(txtIDClie.getText());
+
+            conector.conectar();
+            PreparedStatement consulta;
+
+            consulta = conector.conect.prepareStatement("select NombreCliente from clientes where idCliente=?");
+            consulta.setInt(1, idCliente);
+            ResultSet rs = consulta.executeQuery();
+
+            boolean existe;
+
+            if (rs.next()) {
+                System.out.println("Antes ventana cliente: "+idCliente);
+                sumaPuntos ventana = new sumaPuntos(idCliente);
+                ventana.setVisible(true);
+                this.setVisible(false);
+                System.out.println("cierra");
+                conector.cerrar();
+            } else {
+                System.out.println("no existe");
+                System.out.println("cierra");
+                conector.cerrar();
+            }
+
+
+
+
+            
+
+        } catch (SQLException ex) {
+            System.out.println("Error base datos");
+        } catch (NumberFormatException ex) {
+            System.out.println("Vacio");
+        }
+
+
+
+    }//GEN-LAST:event_btnIdentCliActionPerformed
     /**
      * @param args the command line arguments
      */
@@ -203,16 +246,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
+
+
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VentanaPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(VentanaPrincipal.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -236,8 +287,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private javax.swing.JButton btnRegalos;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JPanel panelBotones;
     private javax.swing.JPanel panelIdentificador;
+    private javax.swing.JTextField txtIDClie;
     // End of variables declaration//GEN-END:variables
 }

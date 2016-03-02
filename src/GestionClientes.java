@@ -481,6 +481,7 @@ public class GestionClientes extends javax.swing.JFrame {
             Statement consulta;
             consulta = con.conect.createStatement();
             ResultSet rs = consulta.executeQuery("select * from clientes");
+            
 
             while (model.getRowCount() > 0) {
                 model.removeRow(0);

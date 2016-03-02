@@ -17,6 +17,8 @@ public class VentanaRegalos extends javax.swing.JFrame {
     /**
      * Creates new form tbnvbhn
      */
+    ConectorBaseDatos conector = new ConectorBaseDatos();
+    
     public VentanaRegalos() {
         
         initComponents();
