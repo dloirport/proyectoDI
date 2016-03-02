@@ -1,13 +1,19 @@
 
+import java.awt.Color;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author dloirport
@@ -18,11 +24,15 @@ public class sumaPuntos extends javax.swing.JFrame {
      * Creates new form sumaPuntos
      */
     ConectorBaseDatos conector = new ConectorBaseDatos();
-    
-    public sumaPuntos(int codCli) { 
+    String nombre = "";
+    String apellidos = "";
+    int puntos = 0;
+
+    public sumaPuntos(int codCli) {
         initComponents();
-        realizarConsulta(codCli);
-        llenarCombo();
+        rellenarDatos(codCli);
+        actualizarRegalos();
+        btnCanjearRegalo.setEnabled(false);
     }
 
     /**
@@ -40,39 +50,37 @@ public class sumaPuntos extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         lblID = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
         panelPuntosAcumulados = new javax.swing.JPanel();
         lblPuntos = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
-        panelRegalos = new javax.swing.JPanel();
-        jLabel9 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        btnCanjearRegalo = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         panelTransacciones = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        txtImporte = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         txtPuntos = new javax.swing.JTextField();
         cmbConcepto = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        sumarPuntos = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tablaRegalosDisponibles = new javax.swing.JTable();
+        btnCanjearRegalo = new javax.swing.JButton();
+        btnImprimirInforme = new javax.swing.JButton();
 
-        setTitle("Gestion Puntos: Juanito Perez");
+        setTitle("Gestion de puntos cliente");
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosing(java.awt.event.WindowEvent evt) {
-                formWindowClosing(evt);
-            }
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
+            }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel2.setText("Gestion Puntos");
+        jLabel2.setText("Gestión de Puntos");
 
         lblNombre.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         lblNombre.setText("Juanito Perez");
@@ -86,35 +94,11 @@ public class sumaPuntos extends javax.swing.JFrame {
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel7.setText("ID Cliente:");
 
-        javax.swing.GroupLayout panelDatosClientesLayout = new javax.swing.GroupLayout(panelDatosClientes);
-        panelDatosClientes.setLayout(panelDatosClientesLayout);
-        panelDatosClientesLayout.setHorizontalGroup(
-            panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelDatosClientesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosClientesLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        panelDatosClientesLayout.setVerticalGroup(
-            panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosClientesLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblID)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblNombre)
-                .addContainerGap())
-        );
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel9.setText("Regalos Disponibles:");
+
+        panelPuntosAcumulados.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204), 4));
 
         lblPuntos.setFont(new java.awt.Font("Tahoma", 3, 18)); // NOI18N
         lblPuntos.setForeground(new java.awt.Color(0, 204, 51));
@@ -123,14 +107,14 @@ public class sumaPuntos extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Puntos Acumulados:");
+        jLabel1.setText("Puntos disponibles:");
 
         javax.swing.GroupLayout panelPuntosAcumuladosLayout = new javax.swing.GroupLayout(panelPuntosAcumulados);
         panelPuntosAcumulados.setLayout(panelPuntosAcumuladosLayout);
         panelPuntosAcumuladosLayout.setHorizontalGroup(
             panelPuntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE)
             .addComponent(lblPuntos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
         );
         panelPuntosAcumuladosLayout.setVerticalGroup(
             panelPuntosAcumuladosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,11 +126,92 @@ public class sumaPuntos extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel9.setText("Regalos Disponibles");
+        javax.swing.GroupLayout panelDatosClientesLayout = new javax.swing.GroupLayout(panelDatosClientes);
+        panelDatosClientes.setLayout(panelDatosClientesLayout);
+        panelDatosClientesLayout.setHorizontalGroup(
+            panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelDatosClientesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
+                    .addGroup(panelDatosClientesLayout.createSequentialGroup()
+                        .addGroup(panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblID, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNombre, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(panelPuntosAcumulados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+        panelDatosClientesLayout.setVerticalGroup(
+            panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelDatosClientesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(panelDatosClientesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(panelDatosClientesLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblID)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblNombre))
+                    .addComponent(panelPuntosAcumulados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                .addComponent(jLabel9))
+        );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
+
+        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel8.setText("Concepto: ");
+
+        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel10.setText("Puntos:");
+
+        cmbConcepto.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Puntos por compra", "Promocion especial" }));
+
+        javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
+        panelTransacciones.setLayout(panelTransaccionesLayout);
+        panelTransaccionesLayout.setHorizontalGroup(
+            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                        .addComponent(jLabel8)
+                        .addGap(18, 18, 18)
+                        .addComponent(cmbConcepto, 0, 178, Short.MAX_VALUE))
+                    .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                        .addComponent(jLabel10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(43, Short.MAX_VALUE))
+        );
+        panelTransaccionesLayout.setVerticalGroup(
+            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(panelTransaccionesLayout.createSequentialGroup()
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(cmbConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 37, Short.MAX_VALUE)
+                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel10)))
+        );
+
+        sumarPuntos.setBackground(new java.awt.Color(0, 0, 0));
+        sumarPuntos.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
+        sumarPuntos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/suma.png"))); // NOI18N
+        sumarPuntos.setActionCommand("");
+        sumarPuntos.setBorder(null);
+        sumarPuntos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sumarPuntosActionPerformed(evt);
+            }
+        });
+
+        tablaRegalosDisponibles.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -169,100 +234,28 @@ public class sumaPuntos extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable1);
+        tablaRegalosDisponibles.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaRegalosDisponibles.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaRegalosDisponiblesMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tablaRegalosDisponibles);
 
-        btnCanjearRegalo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/regalo.png"))); // NOI18N
+        btnCanjearRegalo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/regalo.png"))); // NOI18N
         btnCanjearRegalo.setText("Canjear Puntos");
+        btnCanjearRegalo.setEnabled(false);
         btnCanjearRegalo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCanjearRegaloActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout panelRegalosLayout = new javax.swing.GroupLayout(panelRegalos);
-        panelRegalos.setLayout(panelRegalosLayout);
-        panelRegalosLayout.setHorizontalGroup(
-            panelRegalosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelRegalosLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnCanjearRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(77, 77, 77))
-            .addGroup(panelRegalosLayout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 288, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-        );
-        panelRegalosLayout.setVerticalGroup(
-            panelRegalosLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelRegalosLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel9)
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCanjearRegalo)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jSeparator1.setBackground(new java.awt.Color(0, 0, 0));
-
-        jLabel8.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel8.setText("Concepto: ");
-
-        jLabel10.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel10.setText("Puntos:");
-
-        txtImporte.addInputMethodListener(new java.awt.event.InputMethodListener() {
-            public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
-            }
-            public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                txtImporteInputMethodTextChanged(evt);
-            }
-        });
-
-        jLabel11.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel11.setText("Importe:");
-
-        cmbConcepto.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Puntos por compra", "Promocion especial" }));
-
-        javax.swing.GroupLayout panelTransaccionesLayout = new javax.swing.GroupLayout(panelTransacciones);
-        panelTransacciones.setLayout(panelTransaccionesLayout);
-        panelTransaccionesLayout.setHorizontalGroup(
-            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel11))
-                .addGap(18, 18, 18)
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtImporte)
-                    .addComponent(txtPuntos, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
-                    .addComponent(cmbConcepto, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(20, Short.MAX_VALUE))
-        );
-        panelTransaccionesLayout.setVerticalGroup(
-            panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelTransaccionesLayout.createSequentialGroup()
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel8)
-                    .addComponent(cmbConcepto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtImporte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel11))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addGroup(panelTransaccionesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel10)
-                    .addComponent(txtPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(60, 60, 60))
-        );
-
-        jButton1.setFont(new java.awt.Font("Tahoma", 1, 36)); // NOI18N
-        jButton1.setText("+");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnImprimirInforme.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Imagenes/informes.png"))); // NOI18N
+        btnImprimirInforme.setText("Historico");
+        btnImprimirInforme.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnImprimirInformeActionPerformed(evt);
             }
         });
 
@@ -272,26 +265,26 @@ public class sumaPuntos extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 572, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(38, 38, 38)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(46, 46, 46)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(panelTransacciones, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(89, 89, 89)
-                                .addComponent(jButton1)
-                                .addGap(26, 26, 26))
-                            .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(38, 38, 38)
-                        .addComponent(panelDatosClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 395, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelPuntosAcumulados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addComponent(panelRegalos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(0, 15, Short.MAX_VALUE))
+                            .addComponent(btnCanjearRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnImprimirInforme, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(panelDatosClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(20, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addComponent(panelTransacciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sumarPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -299,22 +292,21 @@ public class sumaPuntos extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelDatosClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(panelDatosClientes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(48, 48, 48)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(panelPuntosAcumulados, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelRegalos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnCanjearRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnImprimirInforme, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(panelTransacciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(36, 36, 36)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(panelTransacciones, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(sumarPuntos, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(27, Short.MAX_VALUE))
         );
 
         pack();
@@ -322,44 +314,102 @@ public class sumaPuntos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCanjearRegaloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanjearRegaloActionPerformed
-        // TODO add your handling code here:
+        try{
+            conector.conectar();
+            
+            int fila = tablaRegalosDisponibles.getSelectedRow();
+            
+            int idRegalo = (int) tablaRegalosDisponibles.getValueAt(fila, 0);
+            String descripcion = (String) tablaRegalosDisponibles.getValueAt(fila, 1);
+            int coste = (int) tablaRegalosDisponibles.getValueAt(fila, 2);
+            
+            int idCliente = Integer.parseInt(lblID.getText());
+            
+            String fecha = obtenerFecha();         
+            
+            PreparedStatement ps = conector.conect.prepareStatement("insert into transacciones values (null,?,?,?,?)");
+            ps.setInt(1, idCliente);
+            ps.setInt(2, coste*-1);
+            ps.setString(3,descripcion);
+            ps.setString(4, fecha);
+            ps.executeUpdate();
+            conector.cerrar();
+            
+            calcularPuntos(idCliente);
+            actualizarRegalos();          
+            
+        } catch (SQLException e) {
+            //System.out.println(e.getMessage());
+            //System.out.println("error al insertar");
+        } catch (NumberFormatException e) {
+           // System.out.println(e.getMessage());
+        }
+
     }//GEN-LAST:event_btnCanjearRegaloActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void sumarPuntosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sumarPuntosActionPerformed
+       try{
+            conector.conectar();
+            int valor = Integer.parseInt(txtPuntos.getText());
+            String concepto = (String) cmbConcepto.getSelectedItem();
+            int idCliente = Integer.parseInt(lblID.getText());
+            String fecha = obtenerFecha();
+            
+           //System.out.println(concepto);
 
-    private void txtImporteInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_txtImporteInputMethodTextChanged
-        String recibe = txtImporte.getText();
-        float valor = Float.parseFloat(recibe);
-        int puntos = (int) (valor/2);
-        txtPuntos.setText(puntos+"");
-        
-    }//GEN-LAST:event_txtImporteInputMethodTextChanged
+            PreparedStatement ps = conector.conect.prepareStatement("insert into transacciones values (null,?,?,?,?)");
+            ps.setInt(1, idCliente);
+            ps.setInt(2, valor);
+            ps.setString(3,concepto);
+            ps.setString(4, fecha);
+            ps.executeUpdate();
+            
+            conector.cerrar();
+            
+            calcularPuntos(idCliente);
+            actualizarRegalos();
+            txtPuntos.setText("");
+            btnCanjearRegalo.setEnabled(false);
+            txtPuntos.setBackground(Color.white);
+ 
+
+            
+        } catch (SQLException e) {
+            //System.out.println(e.getMessage());
+            //System.out.println("error al insertar");
+        } catch (NumberFormatException e) {
+            txtPuntos.setBackground(Color.red);
+            txtPuntos.setText("");
+        }
+    }//GEN-LAST:event_sumarPuntosActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        System.out.println("adios 1");
+
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         VentanaPrincipal ventana = new VentanaPrincipal();
-                ventana.setVisible(true);
+        ventana.setVisible(true);
     }//GEN-LAST:event_formWindowClosing
 
-    private void llenarCombo(){
-        cmbConcepto.addItem("Puntos por compra");
-        cmbConcepto.addItem("Promoción especial");
-    }
+    private void btnImprimirInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirInformeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnImprimirInformeActionPerformed
+
+    private void tablaRegalosDisponiblesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaRegalosDisponiblesMouseClicked
+        btnCanjearRegalo.setEnabled(true);
+    }//GEN-LAST:event_tablaRegalosDisponiblesMouseClicked
+
+    
     /**
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCanjearRegalo;
+    private javax.swing.JButton btnImprimirInforme;
     private javax.swing.JComboBox cmbConcepto;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
@@ -367,20 +417,19 @@ public class sumaPuntos extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblID;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblPuntos;
     private javax.swing.JPanel panelDatosClientes;
     private javax.swing.JPanel panelPuntosAcumulados;
-    private javax.swing.JPanel panelRegalos;
     private javax.swing.JPanel panelTransacciones;
-    private javax.swing.JTextField txtImporte;
+    private javax.swing.JButton sumarPuntos;
+    private javax.swing.JTable tablaRegalosDisponibles;
     private javax.swing.JTextField txtPuntos;
     // End of variables declaration//GEN-END:variables
 
-    private void realizarConsulta(int codigoCliente) {
-        
+    private void rellenarDatos(int codigoCliente) {
+
         try {
 
             conector.conectar();
@@ -389,54 +438,99 @@ public class sumaPuntos extends javax.swing.JFrame {
             consulta = conector.conect.prepareStatement("select NombreCliente,ApellidosCliente from clientes where idCliente=?");
             consulta.setInt(1, codigoCliente);
             ResultSet rs = consulta.executeQuery();
-            
-            String nombre = "";
-            String apellidos = "";
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 nombre = rs.getString(1);
                 apellidos = rs.getString(2);
             }
-            
-            lblNombre.setText(nombre+" "+apellidos);
-            lblID.setText(codigoCliente+"");
-            
+
+            lblNombre.setText(nombre + " " + apellidos);
+            lblID.setText(codigoCliente + "");
+
             conector.cerrar();
-            
+
             calcularPuntos(codigoCliente);
 
         } catch (SQLException ex) {
-            System.out.println("Error base datos");
+           // System.out.println("Error base datos");
         }
-        
+
     }
-    
-    private void calcularPuntos(int codigoCliente){
+
+    /*
+    *** Método que se encarga de calcular los puntos de un cliente
+     */
+    private void calcularPuntos(int codigoCliente) {
         try {
             conector.conectar();
             PreparedStatement consulta;
 
-            consulta = conector.conect.prepareStatement("select sum(valor) as puntos from transacciones where idCliente='?' group by idCliente");
-                        System.out.println("llega primero");
+            consulta = conector.conect.prepareStatement("select sum(valor) as puntos from transacciones where idCliente=? group by idCliente");
             consulta.setInt(1, codigoCliente);
 
             ResultSet rs = consulta.executeQuery();
-            
-            System.out.println("llega 1");
-            int puntos = 0;
-            
-            while(rs.next()){
+
+            while (rs.next()) {
                 puntos = rs.getInt(1);
             }
+
+            lblPuntos.setText(puntos + "");
+
+            conector.cerrar();
+
+        } catch (SQLException e) {
+            //System.out.println("Error calcular puntos");
+        }
+
+    }
+    
+    private String obtenerFecha() {
+
+        Calendar fecha = new GregorianCalendar();
+
+        int ano = fecha.get(Calendar.YEAR);
+        int mes = fecha.get(Calendar.MONTH);
+        int dia = fecha.get(Calendar.DAY_OF_MONTH);
+        int hora = fecha.get(Calendar.HOUR_OF_DAY);
+        int minuto = fecha.get(Calendar.MINUTE);
+        int segundo = fecha.get(Calendar.SECOND);
+        String fechaHoy = dia + "/" + (mes + 1) + "/" + ano;
+
+        return fechaHoy;
+    }
+    
+
+    /*
+    *** Método que actualiza la lista de regalos disponibles para el cliente
+     */
+    private void actualizarRegalos() {
+
+        try {
+            DefaultTableModel model = (DefaultTableModel) tablaRegalosDisponibles.getModel();
+            conector.conectar();
+            Statement consulta;
+            consulta = conector.conect.createStatement();
+            ResultSet rs = consulta.executeQuery("select * from regalos where costeRegalo<=" + puntos);
+
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+                while (rs.next()) {
+                    Object[] datos = new Object[3];
+                    datos[0] = rs.getInt(1);
+                    datos[1] = rs.getString(2);
+                    datos[2] = rs.getInt(3);
+                    model.addRow(datos);
+                btnCanjearRegalo.setEnabled(true);
+                }
             
-            System.out.println("llegar");
-            lblPuntos.setText(puntos+"");
             
             conector.cerrar();
 
-        } catch (SQLException e){
-            System.out.println(e.getMessage());
+        } catch (SQLException ex) {
+
         }
-        
+
     }
 }

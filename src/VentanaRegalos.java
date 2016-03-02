@@ -1,13 +1,24 @@
 
+import java.awt.Color;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import javax.swing.table.DefaultTableModel;
 
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author dloirport
@@ -18,13 +29,12 @@ public class VentanaRegalos extends javax.swing.JFrame {
      * Creates new form tbnvbhn
      */
     ConectorBaseDatos conector = new ConectorBaseDatos();
-    
+
     public VentanaRegalos() {
-        
+
         initComponents();
+        actualizar();
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -35,19 +45,288 @@ public class VentanaRegalos extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        ventanaModificar = new javax.swing.JDialog();
+        txtDescripcionModificada = new javax.swing.JTextField();
+        txtCosteModificado = new javax.swing.JTextField();
+        btnGuardarModificacion = new javax.swing.JButton();
+        btnCancelarModificacion = new javax.swing.JButton();
+        lblNombre = new javax.swing.JLabel();
+        lblIdCliente = new javax.swing.JLabel();
+        lblTitulo = new javax.swing.JLabel();
+        lblCod = new javax.swing.JLabel();
+        ventanaNuevo = new javax.swing.JDialog();
+        txtDescripcionNuevo = new javax.swing.JTextField();
+        txtCosteNuevo = new javax.swing.JTextField();
+        btnGuardarNuevo = new javax.swing.JButton();
+        botonCancelarNuevo = new javax.swing.JButton();
+        lblNombre1 = new javax.swing.JLabel();
+        lblIdCliente1 = new javax.swing.JLabel();
+        lblTitulo1 = new javax.swing.JLabel();
+        btnNuevo = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaRegalos = new javax.swing.JTable();
+        lblGestionClientes = new javax.swing.JLabel();
+        btnCancelar = new javax.swing.JButton();
+        btnModRegalo = new javax.swing.JButton();
+        btnBorrarRegalo = new javax.swing.JButton();
+
+        ventanaModificar.setMinimumSize(new java.awt.Dimension(400, 280));
+        ventanaModificar.setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        ventanaModificar.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+
+        txtDescripcionModificada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDescripcionModificadaActionPerformed(evt);
+            }
+        });
+
+        txtCosteModificado.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCosteModificadoFocusLost(evt);
+            }
+        });
+
+        btnGuardarModificacion.setText("Guardar");
+        btnGuardarModificacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarModificacionActionPerformed(evt);
+            }
+        });
+
+        btnCancelarModificacion.setText("Cancelar");
+        btnCancelarModificacion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarModificacionActionPerformed(evt);
+            }
+        });
+
+        lblNombre.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblNombre.setText("Coste:");
+
+        lblIdCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblIdCliente.setText("Descripción:");
+
+        lblTitulo.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        lblTitulo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo.setText("Ficha Regalo");
+
+        lblCod.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        lblCod.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
+        javax.swing.GroupLayout ventanaModificarLayout = new javax.swing.GroupLayout(ventanaModificar.getContentPane());
+        ventanaModificar.getContentPane().setLayout(ventanaModificarLayout);
+        ventanaModificarLayout.setHorizontalGroup(
+            ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ventanaModificarLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ventanaModificarLayout.createSequentialGroup()
+                        .addComponent(btnGuardarModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCancelarModificacion, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ventanaModificarLayout.createSequentialGroup()
+                        .addComponent(lblNombre)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtCosteModificado, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ventanaModificarLayout.createSequentialGroup()
+                        .addComponent(lblIdCliente)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                        .addComponent(txtDescripcionModificada, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(34, 34, 34))
+            .addGroup(ventanaModificarLayout.createSequentialGroup()
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCod, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        ventanaModificarLayout.setVerticalGroup(
+            ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ventanaModificarLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblTitulo)
+                    .addComponent(lblCod, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(27, 27, 27)
+                .addGroup(ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblIdCliente)
+                    .addComponent(txtDescripcionModificada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCosteModificado, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNombre))
+                .addGap(34, 34, 34)
+                .addGroup(ventanaModificarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardarModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(btnCancelarModificacion, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
+        );
+
+        ventanaNuevo.setMinimumSize(new java.awt.Dimension(400, 280));
+        ventanaNuevo.setModalExclusionType(java.awt.Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
+        ventanaNuevo.setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL);
+
+        txtDescripcionNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDescripcionNuevoActionPerformed(evt);
+            }
+        });
+
+        txtCosteNuevo.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtCosteNuevoFocusLost(evt);
+            }
+        });
+        txtCosteNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCosteNuevoActionPerformed(evt);
+            }
+        });
+
+        btnGuardarNuevo.setText("Guardar");
+        btnGuardarNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarNuevoActionPerformed(evt);
+            }
+        });
+
+        botonCancelarNuevo.setText("Cancelar");
+        botonCancelarNuevo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonCancelarNuevoActionPerformed(evt);
+            }
+        });
+
+        lblNombre1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblNombre1.setText("Coste:");
+
+        lblIdCliente1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        lblIdCliente1.setText("Descripción:");
+
+        lblTitulo1.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        lblTitulo1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTitulo1.setText("Ficha Regalo");
+
+        javax.swing.GroupLayout ventanaNuevoLayout = new javax.swing.GroupLayout(ventanaNuevo.getContentPane());
+        ventanaNuevo.getContentPane().setLayout(ventanaNuevoLayout);
+        ventanaNuevoLayout.setHorizontalGroup(
+            ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ventanaNuevoLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTitulo1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(ventanaNuevoLayout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addGroup(ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(ventanaNuevoLayout.createSequentialGroup()
+                                .addComponent(btnGuardarNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(botonCancelarNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ventanaNuevoLayout.createSequentialGroup()
+                                .addComponent(lblNombre1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtCosteNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ventanaNuevoLayout.createSequentialGroup()
+                                .addComponent(lblIdCliente1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                                .addComponent(txtDescripcionNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(24, 24, 24)))
+                .addContainerGap())
+        );
+        ventanaNuevoLayout.setVerticalGroup(
+            ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ventanaNuevoLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
+                .addComponent(lblTitulo1)
+                .addGap(27, 27, 27)
+                .addGroup(ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblIdCliente1)
+                    .addComponent(txtDescripcionNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCosteNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNombre1))
+                .addGap(34, 34, 34)
+                .addGroup(ventanaNuevoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnGuardarNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                    .addComponent(botonCancelarNuevo, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE))
+                .addGap(28, 28, 28))
+        );
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
             }
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
         });
 
-        jButton1.setMnemonic('x');
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnNuevo.setText("Nuevo Regalo");
+        btnNuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnNuevoActionPerformed(evt);
+            }
+        });
+
+        tablaRegalos.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "ID Regalo", "Descripción", "Valor"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tablaRegalos.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tablaRegalos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaRegalosMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tablaRegalos);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+
+        lblGestionClientes.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        lblGestionClientes.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblGestionClientes.setText("Gestión de Regalos");
+
+        btnCancelar.setText("Cancelar");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
+
+        btnModRegalo.setText("Modificar Regalo");
+        btnModRegalo.setEnabled(false);
+        btnModRegalo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnModRegaloActionPerformed(evt);
+            }
+        });
+
+        btnBorrarRegalo.setText("Borrar Regalo");
+        btnBorrarRegalo.setEnabled(false);
+        btnBorrarRegalo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrarRegaloActionPerformed(evt);
             }
         });
 
@@ -56,37 +335,267 @@ public class VentanaRegalos extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(150, 150, 150)
-                .addComponent(jButton1)
-                .addContainerGap(175, Short.MAX_VALUE))
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblGestionClientes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(10, 10, 10)
+                        .addComponent(btnBorrarRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnModRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(134, 134, 134)
-                .addComponent(jButton1)
-                .addContainerGap(143, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(lblGestionClientes)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBorrarRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnModRegalo, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-       VentanaPrincipal ventana = new VentanaPrincipal();
-       ventana.setVisible(true);
-       this.setVisible(false);
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         VentanaPrincipal ventana = new VentanaPrincipal();
-       ventana.setVisible(true);
+        ventana.setVisible(true);
     }//GEN-LAST:event_formWindowClosed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        VentanaPrincipal ventana = new VentanaPrincipal();
+        ventana.setVisible(true);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        ventanaNuevo.setLocationRelativeTo(this);
+        ventanaNuevo.setVisible(true);
+    }//GEN-LAST:event_btnNuevoActionPerformed
+
+    private void tablaRegalosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaRegalosMouseClicked
+        btnBorrarRegalo.setEnabled(true);
+        btnModRegalo.setEnabled(true);
+    }//GEN-LAST:event_tablaRegalosMouseClicked
+
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+        VentanaPrincipal ventana = new VentanaPrincipal();
+        ventana.setVisible(true);
+        this.setVisible(false);
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    private void btnModRegaloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModRegaloActionPerformed
+
+        int fila = tablaRegalos.getSelectedRow();
+        int id = (int) tablaRegalos.getValueAt(fila, 0);
+
+        String descripcion = (String) tablaRegalos.getValueAt(fila, 1);
+        int valor = (int) tablaRegalos.getValueAt(fila, 2);
+
+        txtDescripcionModificada.setText(descripcion);
+        txtCosteModificado.setText(valor + "");
+        lblCod.setText(id + "");
+
+        ventanaModificar.setLocationRelativeTo(this);
+        ventanaModificar.setVisible(true);
+
+
+    }//GEN-LAST:event_btnModRegaloActionPerformed
+
+    private void btnBorrarRegaloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrarRegaloActionPerformed
+        try {
+            conector.conectar();
+            int fila = tablaRegalos.getSelectedRow();
+            int id = (int) tablaRegalos.getValueAt(fila, 0);
+
+            PreparedStatement ps = conector.conect.prepareStatement("delete from regalos where idRegalo=?");
+            ps.setInt(1, id);
+            ps.executeUpdate();
+
+            conector.cerrar();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println("error al borrar");
+        }
+        actualizar();
+        btnBorrarRegalo.setEnabled(false);
+        btnModRegalo.setEnabled(false);
+    }//GEN-LAST:event_btnBorrarRegaloActionPerformed
+
+    private void txtDescripcionModificadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionModificadaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDescripcionModificadaActionPerformed
+
+    private void btnCancelarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarModificacionActionPerformed
+        ventanaModificar.setVisible(false);
+        this.setVisible(true);
+
+    }//GEN-LAST:event_btnCancelarModificacionActionPerformed
+
+    private void btnGuardarModificacionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarModificacionActionPerformed
+        try {
+            String nuevaDes = txtDescripcionModificada.getText();
+            int nuevoCoste = Integer.parseInt(txtCosteModificado.getText());
+            int id = Integer.parseInt(lblCod.getText());
+
+            System.out.println("antes actualizar");
+            System.out.println(nuevoCoste + "");
+            System.out.println(nuevaDes);
+
+            conector.conectar();
+
+            PreparedStatement ps = conector.conect.prepareStatement("update regalos set descripcionRegalo=?,costeRegalo=? where idRegalo=?");
+            ps.setInt(3, id);
+            ps.setString(1, nuevaDes);
+            ps.setInt(2, nuevoCoste);
+            ps.executeUpdate();
+
+            conector.cerrar();
+
+            btnBorrarRegalo.setEnabled(false);
+            btnModRegalo.setEnabled(false);
+            actualizar();
+            ventanaModificar.setVisible(false);
+
+        } catch (SQLException excSQL) {
+
+        } catch (NumberFormatException ex) {
+            txtCosteModificado.setBackground(Color.red);
+            txtCosteModificado.setText("");
+        }
+
+
+    }//GEN-LAST:event_btnGuardarModificacionActionPerformed
+
+    private void txtDescripcionNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDescripcionNuevoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDescripcionNuevoActionPerformed
+
+    private void txtCosteNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCosteNuevoActionPerformed
+
+    }//GEN-LAST:event_txtCosteNuevoActionPerformed
+
+    private void btnGuardarNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarNuevoActionPerformed
+        try {
+            conector.conectar();
+            int coste = Integer.parseInt(txtCosteNuevo.getText());
+            String descripcion = txtDescripcionNuevo.getText();
+
+            PreparedStatement ps = conector.conect.prepareStatement("insert into regalos values (null,?,?)");
+            ps.setString(1, descripcion);
+            ps.setInt(2, coste);
+            ps.executeUpdate();
+
+            conector.cerrar();
+
+            actualizar();
+            ventanaNuevo.setVisible(false);
+            this.setVisible(true);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+            System.out.println("error al insertar");
+        } catch (NumberFormatException e) {
+            txtCosteNuevo.setBackground(Color.red);
+            txtCosteNuevo.setText("");
+        }
+
+    }//GEN-LAST:event_btnGuardarNuevoActionPerformed
+
+    private void botonCancelarNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonCancelarNuevoActionPerformed
+
+        ventanaNuevo.setVisible(false);
+        this.setVisible(true);
+    }//GEN-LAST:event_botonCancelarNuevoActionPerformed
+
+    private void txtCosteNuevoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCosteNuevoFocusLost
+        try {
+            Integer.parseInt(txtCosteNuevo.getText());
+            txtCosteNuevo.setBackground(Color.white);
+        } catch (NumberFormatException e) {
+            txtCosteNuevo.setBackground(Color.red);
+        }
+    }//GEN-LAST:event_txtCosteNuevoFocusLost
+
+    private void txtCosteModificadoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCosteModificadoFocusLost
+        try {
+            Integer.parseInt(txtCosteModificado.getText());
+            txtCosteModificado.setBackground(Color.white);
+        } catch (NumberFormatException e) {
+            txtCosteModificado.setBackground(Color.red);
+        }
+    }//GEN-LAST:event_txtCosteModificadoFocusLost
+
+    private void actualizar() {
+
+        try {
+            DefaultTableModel model = (DefaultTableModel) tablaRegalos.getModel();
+            conector.conectar();
+            Statement consulta;
+            consulta = conector.conect.createStatement();
+            ResultSet rs = consulta.executeQuery("select * from regalos");
+
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+
+            while (rs.next()) {
+                Object[] datos = new Object[4];
+                datos[0] = rs.getInt(1);
+                datos[1] = rs.getString(2);
+                datos[2] = rs.getInt(3);
+                model.addRow(datos);
+            }
+            conector.cerrar();
+        } catch (SQLException ex) {
+            Logger.getLogger(GestionClientes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    
 
     /**
      * @param args the command line arguments
      */
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton botonCancelarNuevo;
+    private javax.swing.JButton btnBorrarRegalo;
+    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCancelarModificacion;
+    private javax.swing.JButton btnGuardarModificacion;
+    private javax.swing.JButton btnGuardarNuevo;
+    private javax.swing.JButton btnModRegalo;
+    private javax.swing.JButton btnNuevo;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblCod;
+    private javax.swing.JLabel lblGestionClientes;
+    private javax.swing.JLabel lblIdCliente;
+    private javax.swing.JLabel lblIdCliente1;
+    private javax.swing.JLabel lblNombre;
+    private javax.swing.JLabel lblNombre1;
+    private javax.swing.JLabel lblTitulo;
+    private javax.swing.JLabel lblTitulo1;
+    private javax.swing.JTable tablaRegalos;
+    private javax.swing.JTextField txtCosteModificado;
+    private javax.swing.JTextField txtCosteNuevo;
+    private javax.swing.JTextField txtDescripcionModificada;
+    private javax.swing.JTextField txtDescripcionNuevo;
+    private javax.swing.JDialog ventanaModificar;
+    private javax.swing.JDialog ventanaNuevo;
     // End of variables declaration//GEN-END:variables
+
 }
