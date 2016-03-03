@@ -1,5 +1,6 @@
 
 import java.awt.Color;
+import java.io.File;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -393,7 +394,21 @@ public class sumaPuntos extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void btnImprimirInformeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirInformeActionPerformed
-        // TODO add your handling code here:
+        int idCliente=Integer.parseInt(lblID.getText());
+        //CrearDirectortio
+        File carpeta = new File("C:/Reportes");
+        if (!carpeta.exists()) {
+            carpeta.mkdir();
+        }
+        
+        try {
+            GeneracionReportes p = new GeneracionReportes();
+
+            p.ITextHelloWorld(idCliente);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }//GEN-LAST:event_btnImprimirInformeActionPerformed
 
     private void tablaRegalosDisponiblesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaRegalosDisponiblesMouseClicked
@@ -520,7 +535,7 @@ public class sumaPuntos extends javax.swing.JFrame {
                     Object[] datos = new Object[3];
                     datos[0] = rs.getInt(1);
                     datos[1] = rs.getString(2);
-                    datos[2] = rs.getInt(3);
+                    datos[2] = rs.getString(3);
                     model.addRow(datos);
                 btnCanjearRegalo.setEnabled(true);
                 }
